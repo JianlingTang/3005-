@@ -1,0 +1,63 @@
+
+! inlist for mass searching of HD140283 for condition 1  default 
+
+! this is the template used in mass searching of star HD140283
+
+&star_job
+  
+  !### history_columns_file
+    history_columns_file = 'history_mass_search'
+ 
+  ! begin with a pre-main sequence model
+    create_pre_main_sequence_model = .true.
+
+  ! save a model at the end of the run
+    save_model_when_terminate = .true.
+  save_model_filename = 'm<<MASS>>_z<<METALLICITY>>_y<<HELIUM>>_mlt<<ALPHA>>_g5.mod'
+
+  ! display on-screen plots
+    pgstar_flag = .false.
+
+/ !end of star_job namelist
+
+
+&controls
+    !# nuclear reaction controls
+
+         !### default_net_name
+
+         ! Name of base reaction network.
+         ! Each net corresponds to a file in `$MESA_DIR/data/net_data/nets`.
+         ! Look in that directory to see your network options,
+         ! or learn how to create your own net.
+    default_net_name = 'basic.net'
+    photo_interval = 9999
+    !### profile_interval
+    !save a model profile info when `mod(model_number, profile_interval) = 0`.
+    profile_interval = 9999
+    
+     !### history_interval
+     !### history_interval needs to be smaller in order to have better sampling results 
+     ! append an entry to the history.data file when `mod(model_number, history_interval) = 0`.
+      history_interval =1
+
+  ! starting specifications
+    initial_mass = <<MASS>> !1 ! in Msun units
+    initial_z = <<METALLICITY>>
+    initial_y = <<HELIUM>>
+  ! options for energy conservation (see MESA V, Section 3)
+     use_dedt_form_of_energy_eqn = .false.
+     use_gold_tolerances = .false.
+  ! change output filename
+     star_history_name = 'm<<MASS>>z<<METALLICITY>>y<<HELIUM>>a<<ALPHA>>_calib_16_4_his.data'
+  ! stopping condition
+     power_he_burn_upper_limit = 1d6
+     max_age = <<MAX_AGE>>d9
+  ! stop when the center mass fraction of h1 drops below this limit
+  ! xa_central_lower_limit_species(1) = 'h1'
+  ! xa_central_lower_limit(1) = 1d-3
+
+  !mixing length alpha parameter:
+    mixing_length_alpha = <<ALPHA>>
+
+/ ! end of controls namelist
